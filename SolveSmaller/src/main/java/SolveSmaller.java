@@ -3,17 +3,16 @@ import java.util.stream.Collectors;
 
 class SolveSmaller {
     public static void main(String[] args) {
-        if (args.length != 2) {
-            System.out.println("Enter an integer for K followed by a comma-separated list for N.");
+
+        int[] Ks = {13, 68, 109};
+        int[][] Ns = {{1,5,12}, {1,14,17,38}, {13,17,100,110,120}};
+        int[] expected = {2,4,-1};
+        for (int i = 0; i< 3; i++) {
+
+            int soln = solve(Ks[i],Ns[i]);
+            assert soln == expected[i];
+            System.out.println("OK");
         }
-
-        int K = Integer.valueOf(args[0]);
-        List<Integer> N = Arrays.asList(args[1].split(",")).stream()
-                .map(Integer::valueOf)
-                .collect(Collectors.toList());
-
-        List<Integer> soln1 = solve(K, N);
-        System.out.printf("solution for %d is %s", K, soln1.toString());
     }
     static class History {
         History ancestor;
@@ -41,7 +40,8 @@ class SolveSmaller {
             return flattenValues(ancestor.ancestor, acc);
         }
     }
-    static List<Integer> solve(int K, List<Integer> Nums) {
+    //static List<Integer> solve(int K, List<Integer> Nums) {
+    static int solve(int K, int[] Nums) {
         HashSet<Integer> ksToSolve = new HashSet<>(Arrays.asList(K));
         HashMap<Integer, History> soln = new HashMap<>();
         HashSet<Integer> nextKsToSolve = new HashSet<>();
@@ -78,11 +78,12 @@ class SolveSmaller {
         if (soln.containsKey(K)) {
 
             History history = soln.get(K);
-            List<Integer> histVals = History.flattenValues(history, new ArrayList<>());
-            System.out.printf("Got K with depth %d, values %s\n" , history.depth, histVals);
-            System.out.printf("Minimum number of elements to sum to K is %d\n", history.depth);
-            return histVals;
+            //List<Integer> histVals = History.flattenValues(history, new ArrayList<>());
+            //System.out.printf("Got K with depth %d, values %s\n" , history.depth, histVals);
+            //System.out.printf("Minimum number of elements to sum to K is %d\n", history.depth);
+            return history.depth;
         }
-        return Collections.emptyList();
+        //return Collections.emptyList();
+        return -1; // no solution
     }
 }
